@@ -85,10 +85,12 @@ class CRM_Sparkpost {
     if (curl_errno($ch)) {
       throw new Exception('Sparkpost curl error: ', curl_getinfo($ch, CURLINFO_HTTP_CODE));
     }
+    safe_dump($ch);
     curl_close($ch);
 
     // Treat errors if any in the response ...
     $response = json_decode($data);
+    safe_dump($response);
     if ($response->errors) {
       $error = reset($response->errors);
       switch($error->message) {

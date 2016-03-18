@@ -123,3 +123,14 @@ function sparkpost_civicrm_alterMailer(&$mailer, $driver, $params) {
 function sparkpost_log($message) {
   file_put_contents(dirname(__FILE__) . DIRECTORY_SEPARATOR . 'sparkpost_log', $message . PHP_EOL, FILE_APPEND);
 }
+
+function safe_dump() {
+  $args = func_get_args();
+  $log = '/tmp/civi.debug';
+
+  foreach ($args as $a) {
+    file_put_contents($log, var_export($a, TRUE) . "\n", FILE_APPEND);
+  }
+
+  file_put_contents($log, "\n", FILE_APPEND);
+}
