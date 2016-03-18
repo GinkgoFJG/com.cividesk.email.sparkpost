@@ -60,6 +60,12 @@ class CRM_Sparkpost {
 
     // Initialize connection and set headers
     $ch = curl_init();
+
+    curl_setopt($ch, CURLOPT_VERBOSE, true);
+    $verbose = fopen('php://temp', 'w+');
+    curl_setopt($ch, CURLOPT_STDERR, $verbose);
+    curl_setopt($ch, CURLINFO_HEADER_OUT);
+
     curl_setopt($ch, CURLOPT_URL, "https://api.sparkpost.com/api/v1/$path");
     curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
     $request_headers = array();
@@ -85,7 +91,10 @@ class CRM_Sparkpost {
     if (curl_errno($ch)) {
       throw new Exception('Sparkpost curl error: ', curl_getinfo($ch, CURLINFO_HTTP_CODE));
     }
-    safe_dump($ch);
+
+    rewind($verbose);
+    safe_dump(stream_get_contents($verbose), curl_getinfo($ch));
+
     curl_close($ch);
 
     // Treat errors if any in the response ...
