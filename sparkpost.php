@@ -128,9 +128,12 @@ function safe_dump() {
   $args = func_get_args();
   $log = '/tmp/civi.debug';
 
+  ob_start();
   foreach ($args as $a) {
-    file_put_contents($log, var_export($a, TRUE) . "\n", FILE_APPEND);
+    var_dump($a);
   }
+  $output = ob_get_contents() . "\n";
+  ob_end_clean();
 
-  file_put_contents($log, "\n", FILE_APPEND);
+  file_put_contents($log, $output, FILE_APPEND);
 }
